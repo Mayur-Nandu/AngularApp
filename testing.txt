@@ -1,0 +1,4 @@
+url : https://Mayur-Nandu@bitbucket.org/Mayur-Nandu/angular-project.git
+name is mayurn
+email :nandumayur95@gmail.com
+pass:**********
