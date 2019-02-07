@@ -1,5 +1,5 @@
 
-<!-- saved from url=(0106)https://s3.amazonaws.com/coursera-uploads/peer-review/18b007a098bf8685b3b93e48d1d4c2b5/menu.component.html -->
+<!-- saved from url=(0106)https://s3.amazonaws.com/coursera-uploads/peer-review/6dbff1315f49b8c0955b810963d5d4a9/menu.component.html -->
 <html class="gr__s3_amazonaws_com"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"></head><body data-gr-c-s-loaded="true" class="vsc-initialized"><div class="container" fxlayout="column" fxlayoutgap="10px">
 
   <div fxflex="">
@@ -14,13 +14,28 @@
       <mat-grid-tile *ngfor="let dish of dishes">
         <img height="200px" src="./menu.component_files/{{dish.image}}" alt="{{dish.name}}">
         <mat-grid-tile-footer>
-          <h1 matline="">{{dish.name | uppercase}}</h1>
+          <h1>{{dish.name | uppercase}}</h1>
         </mat-grid-tile-footer>
       </mat-grid-tile>
     </mat-grid-list>
   </div>
-
-  <app-dishdetail></app-dishdetail>
-
-</div>
-</body></html>
+<app-dishdetail></app-dishdetail>
+<div fxflex="" *ngif="selectedDish">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <h3>{{selectedDish.name | uppercase}}</h3>
+        </mat-card-title>
+      </mat-card-header>
+      <img mat-card-image="" src="./menu.component_files/{{selectedDish.image}}" alt="{{selectedDish.name}}">
+      <mat-card-content>
+        <p>{{selectedDish.description}}
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button="">LIKE</button>
+        <button mat-button="">SHARE</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>--&gt;
+</div></body></html>

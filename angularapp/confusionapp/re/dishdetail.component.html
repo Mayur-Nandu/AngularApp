@@ -1,0 +1,39 @@
+
+<!-- saved from url=(0112)https://s3.amazonaws.com/coursera-uploads/peer-review/9f387d1b54c36fba1782cb8aa5f3fd9f/dishdetail.component.html -->
+<html class="gr__s3_amazonaws_com"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"></head><body data-gr-c-s-loaded="true" class="vsc-initialized"><div class="container" fxlayout="row" fxlayout.sm="column" fxlayout.xs="column" fxlayoutalign.gt-md="space-around center" fxlayoutgap="10px" fxlayoutgap.xs="0">
+
+  <div fxflex="40">
+    <p>Display the details of the Dish here</p>
+  </div>
+
+  <div fxflex="40" *ngif="dish">
+    <mat-list>
+    <p *ngfor="let dishcomments of dish.comments">
+      {{dishcomments.comment}}
+       {{dishcomments.rating}}
+       {{dishcomments.author}}
+       {{dishcomments.date | date}}
+    </p>
+    </mat-list>
+  </div>
+
+</div>
+<!--new here-->
+<div fxflex="" *ngif="selectedDish">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <h3>{{selectedDish.name | uppercase}}</h3>
+      </mat-card-title>
+    </mat-card-header>
+    <img mat-card-image="" src="./dishdetail.component_files/{{selectedDish.image}}" alt="{{selectedDish.name}}">
+    <mat-card-content>
+      <p>{{selectedDish.description}}
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button="">LIKE</button>
+      <button mat-button="">SHARE</button>
+    </mat-card-actions>
+  </mat-card>
+</div></body></html>
