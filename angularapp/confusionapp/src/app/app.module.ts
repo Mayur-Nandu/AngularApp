@@ -54,7 +54,7 @@ import { LoginComponent } from './login/login.component';
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    MatCheckboxModule,
+    MatCheckboxModule, 
     FormsModule
   ],
   providers: [
