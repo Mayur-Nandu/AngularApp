@@ -35,7 +35,8 @@
 
   
 
-<div fxFlex="40" *ngIf="dish">   {{dish.name | uppercase}}
+<div fxFlex="40" *ngIf="dish">   
+  <!-- {{dish.name | uppercase}} -->
     	<h1 matLine>Comments</h1>
     <mat-list >
     	<!-- <p>{{dish.comments[1].comment}}</p>  -->
@@ -45,6 +46,23 @@
   		 <p matLine>-- {{comment.author }} {{comment.date | date }} </p>
 	</mat-list-item>
     </mat-list>
+    <form novalidate >
+        <p>
+        <mat-form-field  class="full-width">
+          <input matInput formControlName="author" type="text" name="author" placeholder="name"  required>     
+        </mat-form-field>
+      </p>
+      <p>
+          <mat-slider step="1" thumbLabel min="1" max="5" tickInterval="1"></mat-slider>
+      </p>
+        <p>
+          <mat-form-field class="full-width" >
+        <input matInput formControlName="comment" name="comment" placeholder="Your comment" required>
+      </mat-form-field >
+    </p>
+      <button  type="submit" mat-button class="background-primary text-floral-white">Submit</button>
+    </form>
+   
 </div>
 <div [hidden]="dish">
     <mat-spinner></mat-spinner><h4>Loading . . . Please Wait</h4>
