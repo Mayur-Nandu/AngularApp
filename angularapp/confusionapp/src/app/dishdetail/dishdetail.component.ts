@@ -14,15 +14,14 @@ import { FormBuilder, FormGroup,Validators, } from '@angular/forms';
   styleUrls: ['./dishdetail.component.scss']
 })
 
-
-
-
 export class DishdetailComponent implements OnInit {
  
   dishIds: string[];
   prev: string;
   next: string;
   dish: Dish;
+  
+  
   CommentForm : FormGroup;
   @ViewChild('commentform') CommentFormDirective;
   cfVariable : {
@@ -30,6 +29,7 @@ export class DishdetailComponent implements OnInit {
     rating : '' ;
     comment: '';
    };
+
    commentFormErrors ={
     'author' :'',
     'rating' : '' ,
@@ -49,30 +49,39 @@ export class DishdetailComponent implements OnInit {
     },
   };
 
-
   constructor(private dishservice: DishService,
     private route: ActivatedRoute,
     private location: Location,
     private cf : FormBuilder
     ) { 
       this.createFromComment();
+      
     }
 
-    createFromComment()
-    {
-      this.CommentForm = this.cf.group({
-        author : ['', [Validators.required,Validators.minLength(2),Validators.maxLength(25)] ],
-        rating :['', Validators.required ] ,
-        comment :['', [Validators.required, Validators.minLength(2)] ]
-      });
-
-      this.CommentForm.valueChanges
-      .subscribe(data => this.onValueChanged(data));
-
-      this.onValueChanged(); // (re)set validation messages now
+    ngOnInit() {
+      // const id = this.route.snapshot.params['id'];
+      //  this.dishservice.getDish(id).subscribe(dish => this.dish = dish);
+      
+       this.dishservice.getDishIds().subscribe(dishIds => this.dishIds = dishIds);
+      this.route.params.pipe(switchMap((params: Params) => this.dishservice.getDish(params['id'])))
+      .subscribe(dish => { this.dish = dish; this.setPrevNext(dish.id); });
     }
 
-    onValueChanged(data?: any) {
+  createFromComment()
+  {
+    this.CommentForm = this.cf.group({
+      author : ['', [Validators.required,Validators.minLength(2),Validators.maxLength(25)] ],
+      rating :['', Validators.required ] ,
+      comment :['', [Validators.required, Validators.minLength(2)] ]
+    });
+
+    this.CommentForm.valueChanges
+    .subscribe(data => this.onValueChanged(data));
+
+    this.onValueChanged(); // (re)set validation messages now
+  }
+
+  onValueChanged(data?: any) {
       
       if (!this.CommentForm) { return; }
       const form = this.CommentForm;
@@ -103,18 +112,16 @@ export class DishdetailComponent implements OnInit {
 
     onSubmit() {
       this.cfVariable = this.CommentForm.value;
-      console.log(this.cfVariable);
+      this.dish.comments.push({
+        rating: +this.cfVariable.rating,
+        comment: this.cfVariable.comment,
+        author: this.cfVariable.author,
+        date:  new Date().toLocaleDateString()
+      });
       this.CommentFormDirective.resetForm();
     }
 
-  ngOnInit() {
-    // const id = this.route.snapshot.params['id'];
-    //  this.dishservice.getDish(id).subscribe(dish => this.dish = dish);
-
-     this.dishservice.getDishIds().subscribe(dishIds => this.dishIds = dishIds);
-    this.route.params.pipe(switchMap((params: Params) => this.dishservice.getDish(params['id'])))
-    .subscribe(dish => { this.dish = dish; this.setPrevNext(dish.id); });
-  }
+  
   setPrevNext(dishId: string) {
     const index = this.dishIds.indexOf(dishId);
     this.prev = this.dishIds[(this.dishIds.length + index - 1) % this.dishIds.length];
