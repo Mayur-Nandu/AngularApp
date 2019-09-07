@@ -32,7 +32,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import {LeaderService} from './services/leader.service';
 import { LoginComponent } from './login/login.component';
-
+import { HttpClientModule } from '@angular/common/http';
+import { baseURL } from './shared/baseurl';
+import { PromotionService } from './services/promotion.service';
 
 @NgModule({
   declarations: [
@@ -65,11 +67,14 @@ import { LoginComponent } from './login/login.component';
     MatSlideToggleModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
-    MatSliderModule
+    MatSliderModule,
+    HttpClientModule
   ],
   providers: [
     DishService,
-    LeaderService
+    PromotionService,
+    LeaderService,
+    {provide: 'BaseURL', useValue: baseURL}
   ],
   entryComponents: [
     LoginComponent
