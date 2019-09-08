@@ -16,6 +16,7 @@ import { visibility,flyInOut,expand } from '../animations/app.animation';
     visibility(),
     flyInOut(),
     expand()
+    
   ],
   host: {
     '[@flyInOut]': 'true',
