@@ -11,7 +11,7 @@ export class ProcessHTTPMsgService {
 
   public handleError(error: HttpErrorResponse | any) {
     let errMsg: string;
-
+    console.log("adas"); 
     if (error.error instanceof ErrorEvent) {
       errMsg = error.error.message;
     } else {
@@ -20,4 +20,5 @@ export class ProcessHTTPMsgService {
 
     return throwError(errMsg);
   }
+
 }

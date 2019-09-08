@@ -20,14 +20,16 @@ export class DishdetailComponent implements OnInit {
   prev: string;
   next: string;
   dish: Dish;
-  
+  dishcopy: Dish;
+  errMess: string;
   
   CommentForm : FormGroup;
   @ViewChild('commentform') CommentFormDirective;
-  cfVariable : {
-    author :'';
-    rating : '' ;
-    comment: '';
+  comment : {
+    author ;
+    rating  ;
+    comment;
+    date;
    };
 
    commentFormErrors ={
@@ -49,10 +51,11 @@ export class DishdetailComponent implements OnInit {
     },
   };
 
-  constructor(private dishservice: DishService,
+  constructor(private dishService: DishService,
     private route: ActivatedRoute,
     private location: Location,
     private cf : FormBuilder,
+
     @Inject('BaseURL') private BaseURL
     ) { 
       this.createFromComment();
@@ -63,9 +66,11 @@ export class DishdetailComponent implements OnInit {
       // const id = this.route.snapshot.params['id'];
       //  this.dishservice.getDish(id).subscribe(dish => this.dish = dish);
       
-       this.dishservice.getDishIds().subscribe(dishIds => this.dishIds = dishIds);
-      this.route.params.pipe(switchMap((params: Params) => this.dishservice.getDish(params['id'])))
-      .subscribe(dish => { this.dish = dish; this.setPrevNext(dish.id); });
+       this.dishService.getDishIds().subscribe(dishIds => this.dishIds = dishIds);
+      this.route.params
+      .pipe(switchMap((params: Params) => this.dishService.getDish(params['id'])))
+      .subscribe(dish => { this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id); },
+        errmess => this.errMess = <any>errmess );
     }
 
   createFromComment()
@@ -112,14 +117,23 @@ export class DishdetailComponent implements OnInit {
 
 
     onSubmit() {
-      this.cfVariable = this.CommentForm.value;
-      this.dish.comments.push({
-        rating: +this.cfVariable.rating,
-        comment: this.cfVariable.comment,
-        author: this.cfVariable.author,
+      this.comment = this.CommentForm.value;
+      this.comment = {
+        rating: +this.comment.rating,
+        comment: this.comment.comment,
+        author: this.comment.author,
         date:  new Date().toLocaleDateString()
-      });
+      };
+      this.dishcopy.comments.push(this.comment);
+    this.dishService.putDish(this.dishcopy)
+      .subscribe(dish => {
+        this.dish = dish; this.dishcopy = dish;
+      },
+      errmess => { this.dish = null; this.dishcopy = null; this.errMess = <any>errmess; });
+
       this.CommentFormDirective.resetForm();
+
+      
     }
 
   
