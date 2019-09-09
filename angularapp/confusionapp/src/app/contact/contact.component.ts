@@ -2,6 +2,7 @@ import { Component, OnInit,ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Feedback, ContactType } from '../shared/feedback';
 import { flyInOut} from '../animations/app.animation';
+import {FeedbackService} from '../services/feedback.service';
 
 @Component({
   selector: 'app-contact',
@@ -22,8 +23,10 @@ export class ContactComponent implements OnInit {
   feedbackForm: FormGroup;
   feedback: Feedback;
   contactType = ContactType;
+  errmess:string;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private feedbackService : FeedbackService,
+    private fb: FormBuilder) {
     this.createForm();
   }
 
@@ -107,6 +110,11 @@ export class ContactComponent implements OnInit {
       contacttype: 'None',
       message: ''
     });
+    // calling the put method to push data to the server
+    this.feedbackService.submitFeedback(this.feedback)
+    .subscribe(feedback => {this.feedback=feedback }, 
+      errmess => { this.errmess =errmess});
+
     this.feedbackFormDirective.resetForm();
   }
 
