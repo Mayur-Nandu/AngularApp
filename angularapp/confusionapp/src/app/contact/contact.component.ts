@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Feedback, ContactType } from '../shared/feedback';
 import { flyInOut} from '../animations/app.animation';
 import {FeedbackService} from '../services/feedback.service';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-contact',
@@ -22,9 +23,12 @@ export class ContactComponent implements OnInit {
 
   feedbackForm: FormGroup;
   feedback: Feedback;
+  feedbackcopy :Feedback; //to store the copy of the form in casse the submission fails
   contactType = ContactType;
-  errmess:string;
-
+  errmess:string; //to display the error message 
+  FormHidden : boolean; // to denote the state of the form
+  success:boolean; // to dentode the success of the form submission
+  
   constructor(private feedbackService : FeedbackService,
     private fb: FormBuilder) {
     this.createForm();
@@ -100,6 +104,7 @@ export class ContactComponent implements OnInit {
 
   onSubmit() {
     this.feedback = this.feedbackForm.value;
+    this.feedbackcopy=this.feedback;
     console.log(this.feedback);
     this.feedbackForm.reset({
       firstname: '',
@@ -110,12 +115,30 @@ export class ContactComponent implements OnInit {
       contacttype: 'None',
       message: ''
     });
+    this.FormHidden=true;
     // calling the put method to push data to the server
-    this.feedbackService.submitFeedback(this.feedback)
-    .subscribe(feedback => {this.feedback=feedback }, 
-      errmess => { this.errmess =errmess});
-
-    this.feedbackFormDirective.resetForm();
+    this.feedbackService.submitFeedback(this.feedbackcopy)
+    .subscribe(feedback => {this.feedback=feedback, 
+                            this.feedbackcopy=feedback,
+                            this.success=true;
+                             }, 
+      errmess => { this.errmess =errmess,
+                    this.feedback=null;
+                    this.feedbackcopy=null;
+                  this.success=false ///if error occured success is false
+                });
+      setTimeout(()=>{
+                      if(this.success == true ) //checking if error occred or not 
+                      {//if no error then only execute the following
+                        // making success false to hide the spinner 
+                        this.success=false;
+                        // display the form again after 5 secs
+                        this.FormHidden=false;               
+                        // reset the form again after 5 secs
+                        this.feedbackFormDirective.resetForm();
+                      }
+                    },5000);  
+    
   }
 
 }
